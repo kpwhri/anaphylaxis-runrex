@@ -27,6 +27,8 @@ def test_matches_related_meds(text):
     'gave a 2nd dose',
     '3rd injection',
     'given another epi injection',
+    'doses 2x',
+    'epi x 4'
 ])
 def test_matches_multiple_epi(text):
     assert MULTIPLE_EPI.matches(text)

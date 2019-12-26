@@ -23,7 +23,7 @@ WITHIN_TIME = Pattern(
 )
 
 SUDDEN = Pattern(
-    rf'(sudden|abrupt|rapid|quick|swift|without warning)(ly)?'
+    rf'(sudden|abrupt|rapid|quick|swift|without warning|immediate)(ly)?'
 )
 
 
