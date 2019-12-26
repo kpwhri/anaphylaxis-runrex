@@ -90,17 +90,17 @@ def _epinephrine_use(document: Document):
         found = 0
         if sentence.has_pattern(EPI_HAS):
             found = 1
-            yield EpiStatus.HAS_EPI
+            yield EpiStatus.HAS_EPI, sentence.text
             continue   # ?? - probably non-event
         if sentence.has_pattern(RELATED_MEDS):
             found = 1
             yield EpiStatus.ALLERGY_MED, sentence.text
         if sentence.has_pattern(MULTIPLE_EPI):
             found = 1
-            yield EpiStatus.MULTIPLE_EPI
+            yield EpiStatus.MULTIPLE_EPI, sentence.text
         if sentence.has_pattern(RELATED_MEDS):
             found = 1
-            yield EpiStatus.ALLERGY_MED
+            yield EpiStatus.ALLERGY_MED, sentence.text
         if not found:
             yield EpiStatus.EPI_MENTION, sentence.text
 
