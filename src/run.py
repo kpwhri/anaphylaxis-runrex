@@ -5,6 +5,7 @@ from runrex.main import process
 from runrex.schema import validate_config
 
 from anaphylaxis_nlp.algo.epinephrine import get_epinephrine
+from anaphylaxis_nlp.algo.observation import get_observation
 from anaphylaxis_nlp.algo.primary_dx import get_anaphylaxis_dx
 from anaphylaxis_nlp.algo.sudden import get_suddenness
 
@@ -15,6 +16,7 @@ def main(config_file):
         'dx': get_anaphylaxis_dx,
         'sudden': get_suddenness,
         'epinephrine': get_epinephrine,
+        'observation': get_observation,
     }
     process(**conf, algorithms=algorithms, ssplit=ssplit)
 
