@@ -1,6 +1,8 @@
 from runrex.algo.pattern import Pattern, Document
 from runrex.algo.result import Status, Result
 
+from anaphylaxis_nlp.algo.epinephrine import hypothetical
+
 
 class ObsStatus(Status):
     NONE = -1
@@ -8,27 +10,29 @@ class ObsStatus(Status):
     MONITORING = 2
 
 
-overnight = r'(observation|overnight|extended|hospital|unit|icm?u|neuro)'
+overnight = r'(observation|overnight|extended|hospital|unit|[i1]cm?u|neuro)'
 admit = r'\b(add?mit|admission|transfer|xfer)\w*'
 
 OBSERVATION = Pattern(
-    rf'{admit} (\w+ )?((for|to) )?(\w+ )?{overnight}'
+    rf'{admit} (\w+ )?((for|to) )?(\w+ )?{overnight}',
+    negates=[hypothetical]
 )
 
 MONITORING = Pattern(
-    rf'(close|continu)\w* ((to|for) )?(\w+ )?(monitor|observ|check|follow|track)\w*'
+    rf'(close|continu)\w* ((to|for) )?(\w+ )?(monitor|observ|check|follow|track)\w*',
+    negates=[hypothetical]
 )
 
 
 def _search_observation(document: Document):
     for sentence in document:
-        if sentence.has_pattern(OBSERVATION):
-            yield ObsStatus.OBSERVATION, sentence.text
-        if sentence.has_pattern(MONITORING):
-            yield ObsStatus.MONITORING, sentence.text
+        for _, start, end in sentence.get_patterns(OBSERVATION):
+            yield ObsStatus.OBSERVATION, sentence.text, start, end
+        for _, start, end in sentence.get_patterns(MONITORING):
+            yield ObsStatus.MONITORING, sentence.text, start, end
 
 
 def get_observation(document: Document, expected=None):
-    for status, text in _search_observation(document):
+    for status, text, start, end in _search_observation(document):
         yield Result(status, status.value, expected=expected,
-                     text=text)
+                     text=text, start=start, end=end)

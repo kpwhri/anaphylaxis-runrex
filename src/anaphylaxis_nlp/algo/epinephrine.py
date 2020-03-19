@@ -11,7 +11,7 @@ from runrex.algo.result import Status, Result
 
 negation = r'((does|wo|has)n t\b|refuses?|\bnot\b|den(y|ies)|\bnor\b|neither)'
 instructions = r'(instruct(ions?|ed)?|do not|discussed)'
-hypothetical = r'(should|ought|\bif\b|please|\bmay\b|shall|call 911)'
+hypothetical = r'(should|ought|\bif\b|please|\bmay\b|shall|\bcall\b)'
 
 
 class EpiStatus(Status):
@@ -26,7 +26,7 @@ class EpiStatus(Status):
 
 
 epinephrine = rf'(\bepi\b|\bepinephrine|\bepi pend?s?|adrenalin\b|adrenaclick)'
-another = rf'(second|third|fourth|fifth|another|2nd|3rd|4th|5th)'
+another = rf'(second|third|fourth|fifth|another|2nd|3rd|4th|5th|further)'
 times_ge2 = rf'(2|3|4|two|three|four)'
 prescription = rf'(take\b|ordered|prescription|pr[eo]scribed|plan|injector' \
                rf'|as needed|medications?|warning|\bkit\b)'
@@ -88,24 +88,25 @@ ANY_EPI = Pattern(
 def _epinephrine_use(document: Document):
     for sentence in document.select_sentences_with_patterns(ANY_EPI):
         found = 0
-        if sentence.has_pattern(EPI_HAS):
+        for _, start, end in sentence.get_patterns(EPI_HAS):
             found = 1
-            yield EpiStatus.HAS_EPI, sentence.text
-            continue   # ?? - probably non-event
-        if sentence.has_pattern(RELATED_MEDS):
+            yield EpiStatus.HAS_EPI, sentence.text, start, end
+        if found:
+            continue  # probably non-event
+        for _, start, end in sentence.get_patterns(RELATED_MEDS):
             found = 1
-            yield EpiStatus.ALLERGY_MED, sentence.text
-        if sentence.has_pattern(MULTIPLE_EPI):
+            yield EpiStatus.ALLERGY_MED, sentence.text, start, end
+        for _, start, end in sentence.get_patterns(MULTIPLE_EPI):
             found = 1
-            yield EpiStatus.MULTIPLE_EPI, sentence.text
-        if sentence.has_pattern(RELATED_MEDS):
+            yield EpiStatus.MULTIPLE_EPI, sentence.text, start, end
+        for _, start, end in sentence.get_patterns(RELATED_MEDS):
             found = 1
-            yield EpiStatus.ALLERGY_MED, sentence.text
+            yield EpiStatus.ALLERGY_MED, sentence.text, start, end
         if not found:
-            yield EpiStatus.EPI_MENTION, sentence.text
+            yield EpiStatus.EPI_MENTION, sentence.text, None, None
 
 
 def get_epinephrine(document: Document, expected=None):
-    for status, text in _epinephrine_use(document):
+    for status, text, start, end in _epinephrine_use(document):
         yield Result(status, status.value, expected=expected,
-                     text=text)
+                     text=text, start=start, end=end)

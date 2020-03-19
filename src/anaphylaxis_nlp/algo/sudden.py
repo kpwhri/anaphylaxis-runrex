@@ -5,6 +5,7 @@ Captures suddenness of an event (specifically, for symptoms of anaphylactic shoc
 from runrex.algo.pattern import Pattern, Document
 from runrex.algo.result import Status, Result
 
+from anaphylaxis_nlp.algo.epinephrine import hypothetical
 from anaphylaxis_nlp.algo.symptom import ALL_SYMPTOMS
 
 
@@ -17,29 +18,38 @@ class SuddennessStatus(Status):
 
 
 WITHIN_TIME = Pattern(
-    rf'within '
-    rf'(a (few|couple)|\d+)?'
-    rf'minutes?'
+    rf'(within|over) (a (few|couple)|the next|\d+)? (minute|hour)s?',
+    negates=[hypothetical]
 )
 
 SUDDEN = Pattern(
-    rf'(sudden|abrupt|rapid|quick|swift|without warning|immediate)(ly)?'
+    rf'('
+    rf'(sudden|abrupt|rapid|quick|swift|without warning|immediate|shortly)(ly)?'
+    rf'|after \w+ing'
+    rf'|began (to )?(hav|expierenc)\w+'
+    rf'|acute onset'
+    rf')',
+    negates=[hypothetical]
 )
 
 
 def _search_suddenness(document: Document):
     for sentence in document.select_sentences_with_patterns(WITHIN_TIME):
-        if sentence.has_patterns(*ALL_SYMPTOMS):
-            yield SuddennessStatus.WITHIN_TIME_SYMPTOM, sentence.text
-        else:
-            yield SuddennessStatus.WITHIN_TIME, sentence.text
+        found = 0
+        for _, start, end in sentence.get_patterns(*ALL_SYMPTOMS):
+            found = 1
+            yield SuddennessStatus.WITHIN_TIME_SYMPTOM, sentence.text, start, end
+        if not found:
+            yield SuddennessStatus.WITHIN_TIME, sentence.text, sentence.match_start, sentence.match_end
     for sentence in document.select_sentences_with_patterns(SUDDEN):
-        if sentence.has_patterns(*ALL_SYMPTOMS):
-            yield SuddennessStatus.SUDDEN_SYMPTOM, sentence.text
-        else:
-            yield SuddennessStatus.SUDDEN, sentence.text
+        found = 0
+        for _, start, end in sentence.get_patterns(*ALL_SYMPTOMS):
+            found = 1
+            yield SuddennessStatus.SUDDEN_SYMPTOM, sentence.text, start, end
+        if not found:
+            yield SuddennessStatus.SUDDEN, sentence.text, sentence.match_start, sentence.match_end
 
 
 def get_suddenness(document: Document, expected=None):
-    for status, text in _search_suddenness(document):
-        yield Result(status, status.value, expected=expected, text=text)
+    for status, text, start, end in _search_suddenness(document):
+        yield Result(status, status.value, expected=expected, text=text, start=start, end=end)
