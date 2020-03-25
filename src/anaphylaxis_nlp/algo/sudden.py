@@ -35,19 +35,17 @@ SUDDEN = Pattern(
 
 def _search_suddenness(document: Document):
     for sentence in document.select_sentences_with_patterns(WITHIN_TIME):
-        found = 0
-        for _, start, end in sentence.get_patterns(*ALL_SYMPTOMS):
-            found = 1
-            yield SuddennessStatus.WITHIN_TIME_SYMPTOM, sentence.text, start, end
-        if not found:
-            yield SuddennessStatus.WITHIN_TIME, sentence.text, sentence.match_start, sentence.match_end
+        text = None
+        for text, start, end in sentence.get_patterns(*ALL_SYMPTOMS):
+            yield SuddennessStatus.WITHIN_TIME_SYMPTOM, text, start, end
+        if not text:
+            yield SuddennessStatus.WITHIN_TIME, sentence.match_text, sentence.match_start, sentence.match_end
     for sentence in document.select_sentences_with_patterns(SUDDEN):
-        found = 0
-        for _, start, end in sentence.get_patterns(*ALL_SYMPTOMS):
-            found = 1
-            yield SuddennessStatus.SUDDEN_SYMPTOM, sentence.text, start, end
-        if not found:
-            yield SuddennessStatus.SUDDEN, sentence.text, sentence.match_start, sentence.match_end
+        text = None
+        for text, start, end in sentence.get_patterns(*ALL_SYMPTOMS):
+            yield SuddennessStatus.SUDDEN_SYMPTOM, text, start, end
+        if not text:
+            yield SuddennessStatus.SUDDEN, sentence.match_text, sentence.match_start, sentence.match_end
 
 
 def get_suddenness(document: Document, expected=None):

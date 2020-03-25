@@ -87,23 +87,17 @@ ANY_EPI = Pattern(
 
 def _epinephrine_use(document: Document):
     for sentence in document.select_sentences_with_patterns(ANY_EPI):
-        found = 0
-        for _, start, end in sentence.get_patterns(EPI_HAS):
-            found = 1
-            yield EpiStatus.HAS_EPI, sentence.text, start, end
-        if found:
+        text = None
+        for text, start, end in sentence.get_patterns(EPI_HAS):
+            yield EpiStatus.HAS_EPI, text, start, end
+        if text:
             continue  # probably non-event
-        for _, start, end in sentence.get_patterns(RELATED_MEDS):
-            found = 1
-            yield EpiStatus.ALLERGY_MED, sentence.text, start, end
-        for _, start, end in sentence.get_patterns(MULTIPLE_EPI):
-            found = 1
-            yield EpiStatus.MULTIPLE_EPI, sentence.text, start, end
-        for _, start, end in sentence.get_patterns(RELATED_MEDS):
-            found = 1
-            yield EpiStatus.ALLERGY_MED, sentence.text, start, end
-        if not found:
-            yield EpiStatus.EPI_MENTION, sentence.text, None, None
+        for text, start, end in sentence.get_patterns(MULTIPLE_EPI):
+            yield EpiStatus.MULTIPLE_EPI, text, start, end
+        for text, start, end in sentence.get_patterns(RELATED_MEDS):
+            yield EpiStatus.ALLERGY_MED, text, start, end
+        if not text:
+            yield EpiStatus.EPI_MENTION, sentence.match_text, sentence.match_start, sentence.match_end
 
 
 def get_epinephrine(document: Document, expected=None):

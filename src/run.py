@@ -30,7 +30,7 @@ def subsplit(sentence: str, start: int, pattern) -> Tuple[str, int, int]:
 
 
 def ssplit(text: str) -> Tuple[str, int, int]:
-    text = '  '.join(text.split('\n'))  # join broken lines
+    text = ' '.join(text.split('\n'))  # join broken lines
     sub_pat = re.compile(r'[*•-]')
     start = 0
     for m in re.finditer(r'(?<!\w\.\w.)(?<![A-Z][a-z]\.)(?<=\.|\?|\!|\*)\s', text):

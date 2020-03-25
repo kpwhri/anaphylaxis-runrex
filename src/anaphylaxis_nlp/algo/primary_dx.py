@@ -68,27 +68,21 @@ ACTIVE = Pattern(
 
 def _search_anaphylaxis_dx(document: Document):
     for sentence in document.select_sentences_with_patterns(ANAPHYLAXIS):
-        found = 0
-        for _, start, end in sentence.get_patterns(PRIMARY):
-            found = 1
-            yield DxStatus.PRIMARY, sentence.text, start, end
-        for _, start, end in sentence.get_patterns(DIFFERENTIAL):
-            found = 1
-            yield DxStatus.DIFFERENTIAL, sentence.text, start, end
-        for _, start, end in sentence.get_patterns(VISIT):
-            found = 1
-            yield DxStatus.VISIT, sentence.text, start, end
-        for _, start, end in sentence.get_patterns(FOLLOWUP):
-            found = 1
-            yield DxStatus.FOLLOWUP, sentence.text, start, end
-        for _, start, end in sentence.get_patterns(DIAGNOSIS):
-            found = 1
-            yield DxStatus.GENERIC, sentence.text, start, end
-        for _, start, end in sentence.get_patterns(FINDING):
-            found = 1
-            yield DxStatus.FINDING, sentence.text, start, end
-        if not found:
-            yield DxStatus.NONE, sentence.text, None, None
+        text = None
+        for text, start, end in sentence.get_patterns(PRIMARY):
+            yield DxStatus.PRIMARY, text, start, end
+        for text, start, end in sentence.get_patterns(DIFFERENTIAL):
+            yield DxStatus.DIFFERENTIAL, text, start, end
+        for text, start, end in sentence.get_patterns(VISIT):
+            yield DxStatus.VISIT, text, start, end
+        for text, start, end in sentence.get_patterns(FOLLOWUP):
+            yield DxStatus.FOLLOWUP, text, start, end
+        for text, start, end in sentence.get_patterns(DIAGNOSIS):
+            yield DxStatus.GENERIC, text, start, end
+        for text, start, end in sentence.get_patterns(FINDING):
+            yield DxStatus.FINDING, text, start, end
+        if not text:
+            yield DxStatus.NONE, sentence.match_text, sentence.match_start, sentence.match_end
 
 
 def get_anaphylaxis_dx(document: Document, expected=None):

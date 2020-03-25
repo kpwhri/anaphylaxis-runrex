@@ -5,18 +5,18 @@ ASYSTOLE = Pattern(
 )
 
 HIVES = Pattern(
-    rf'(hives|urticaria|rash)'
+    rf'\b(hives|urticaria|rash)\b'
 )
 
 SWELLING = Pattern(
-    rf'(swelling|o?edema)'
+    rf'\b(swelling|o?edema)\b'
 )
 
 SOB = Pattern(
     rf'('
     rf'\bs o b\b|short\w* of breath\w*'
     rf'|dyspno?ea'
-    rf'|difficult* (\w+ )?breath\w*'
+    rf'|difficult\w* (\w+ )?breath\w*'
     rf'|breathless(ness)?'
     rf'|(respiratory|pulmonary) distress'
     rf')'

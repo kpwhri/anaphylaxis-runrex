@@ -26,10 +26,10 @@ MONITORING = Pattern(
 
 def _search_observation(document: Document):
     for sentence in document:
-        for _, start, end in sentence.get_patterns(OBSERVATION):
-            yield ObsStatus.OBSERVATION, sentence.text, start, end
-        for _, start, end in sentence.get_patterns(MONITORING):
-            yield ObsStatus.MONITORING, sentence.text, start, end
+        for text, start, end in sentence.get_patterns(OBSERVATION):
+            yield ObsStatus.OBSERVATION, text, start, end
+        for text, start, end in sentence.get_patterns(MONITORING):
+            yield ObsStatus.MONITORING, text, start, end
 
 
 def get_observation(document: Document, expected=None):
