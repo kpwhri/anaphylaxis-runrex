@@ -63,11 +63,11 @@ EPI_HAS = Pattern(
 
 MULTIPLE_EPI = Pattern(
     rf'('
-    rf'{times_ge2} (times|x\b|doses?|injections?|{epinephrine})'
+    rf'{times_ge2} (times|x\b|doses?|shots?|injections?|{epinephrine})'
     rf'|(twice|thrice)'
     rf'|x {times_ge2}'
     rf'|repeated'
-    rf'|{another} ({epinephrine}|time|dose|injection)'
+    rf'|{another} ({epinephrine}|shot|time|dose|injection)'
     rf')',
     negates=[negation, hypothetical, instructions, prescription]
 )
@@ -96,6 +96,8 @@ def _epinephrine_use(document: Document):
             yield EpiStatus.MULTIPLE_EPI, text, start, end
         for text, start, end in sentence.get_patterns(RELATED_MEDS):
             yield EpiStatus.ALLERGY_MED, text, start, end
+        for text, start, end in sentence.get_patterns(EPI_USE):
+            yield EpiStatus.EPI_USE, text, start, end
         if not text:
             yield EpiStatus.EPI_MENTION, sentence.match_text, sentence.match_start, sentence.match_end
 
