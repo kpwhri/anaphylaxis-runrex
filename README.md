@@ -24,15 +24,15 @@
 <!-- PROJECT LOGO -->
 <br />
 <div>
-  <p align="center">
+  <p>
     <a href="https://github.com/github_username/repo">
-      <img src="images/logo.png" alt="Logo" width="80" height="80">
+      <img src="images/logo.png" alt="Logo">
     </a>
   </p>
 
   <h3 align="center">Anaphylaxis-Runrex</h3>
 
-  <p align="center">
+  <p>
     Feature extraction for developing an algorithm to identify anaphylaxis cases.
     Additional steps will require use of these variables to build a predictive algorithm.
   </p>
@@ -122,6 +122,16 @@ Variables (called 'algorithms') are broken down into various 'categories'. Eithe
 |dx|NONE|other mention of 'anaphylaxis'|
 
 
+## Output Format
+
+See [runrex](https://github.com/kpwhri/runrex).
+
+
+## Versions
+
+<!-- Uses [SEMVER](https://semver.org/). -->
+
+Updates/changes are not expected. Versioning is based on `YYYYmmm`. See https://github.com/kpwhri/anaphylaxis-runrex/releases.
 
 <!-- ROADMAP -->
 ## Roadmap
