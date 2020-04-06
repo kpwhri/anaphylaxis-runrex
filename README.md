@@ -25,7 +25,7 @@
 <br />
 <div>
   <p>
-    <a href="https://github.com/github_username/repo">
+    <a href="https://github.com/kpwhri/anaphylaxis-runrex">
       <img src="images/logo.png" alt="Logo">
     </a>
   </p>
@@ -124,7 +124,7 @@ Variables (called 'algorithms') are broken down into various 'categories'. Eithe
 
 ## Output Format
 
-See [runrex](https://github.com/kpwhri/runrex).
+Recommended format is `jsonl`. For more details, see [runrex](https://github.com/kpwhri/runrex).
 
 
 ## Versions
