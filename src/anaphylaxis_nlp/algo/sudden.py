@@ -2,11 +2,12 @@
 Captures suddenness of an event (specifically, for symptoms of anaphylactic shock).
 
 """
-from runrex.algo.pattern import Pattern, Document
+from runrex.algo.pattern import Pattern
 from runrex.algo.result import Status, Result
 
 from anaphylaxis_nlp.algo.epinephrine import hypothetical
 from anaphylaxis_nlp.algo.symptom import ALL_SYMPTOMS
+from runrex.text import Document
 
 
 class SuddennessStatus(Status):

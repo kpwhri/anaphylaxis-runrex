@@ -6,8 +6,9 @@ Features having to do with epinephrine. Of particular interest:
 * indication that multiple epinephrine shots have been taken/received
 
 """
-from runrex.algo.pattern import Document, Pattern
+from runrex.algo.pattern import Pattern
 from runrex.algo.result import Status, Result
+from runrex.text import Document
 
 negation = r'((does|wo|has)n t\b|refuses?|\bnot\b|den(y|ies)|\bnor\b|neither)'
 instructions = r'(instruct(ions?|ed)?|do not|discussed)'

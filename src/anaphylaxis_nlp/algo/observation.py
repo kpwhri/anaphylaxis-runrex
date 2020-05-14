@@ -1,4 +1,5 @@
-from runrex.algo.pattern import Pattern, Document
+from runrex.algo.pattern import Pattern
+from runrex.text import Document
 from runrex.algo.result import Status, Result
 
 from anaphylaxis_nlp.algo.epinephrine import hypothetical

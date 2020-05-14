@@ -1,5 +1,5 @@
 import pytest
-from runrex.algo.pattern import Document
+from runrex.text.document import Document
 
 from anaphylaxis_nlp.algo.observation import OBSERVATION, MONITORING, get_observation, ObsStatus
 
@@ -26,4 +26,4 @@ def test_get_observation():
     doc = Document('name', text=sent)
     res = next(get_observation(doc))
     assert res.value == ObsStatus.OBSERVATION.name
-    assert res.text == sent
+    assert res.text == 'admit him for further observation'
